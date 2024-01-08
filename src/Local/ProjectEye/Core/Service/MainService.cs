@@ -122,7 +122,7 @@ namespace ProjectEye.Core.Service
             //关闭暂不提醒
             config.options.General.Noreset = false;
             //关闭番茄时钟模式
-            config.options.General.IsTomatoMode = false;
+            // config.options.General.IsTomatoMode = false;
 
             //初始化用眼计时器
             work_timer = new DispatcherTimer();
@@ -518,7 +518,7 @@ namespace ProjectEye.Core.Service
         #region 用眼到达设定时间 Event
         private void timer_Tick(object sender, EventArgs e)
         {
-            ShowTipWindow();
+            // ShowTipWindow();
             OnReset?.Invoke(this, 0);
         }
         #endregion

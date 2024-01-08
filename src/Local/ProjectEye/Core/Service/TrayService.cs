@@ -126,7 +126,7 @@ namespace ProjectEye.Core.Service
             notifyIcon.Visible = true;
             notifyIcon.MouseMove += NotifyIcon_MouseMove;
             notifyIcon.MouseClick += notifyIcon_MouseClick;
-            notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
+            // notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
 
             noresetTimer = new DispatcherTimer();
 

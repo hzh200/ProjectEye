@@ -83,17 +83,10 @@ namespace ProjectEye.Core.Service
 #endif
 
             main.OnLeaveEvent += Main_OnLeaveEvent  ;
+
+            //启动番茄
+            Start();
         }
-
-
-
-
-
-
-
-
-
-
 
         #endregion
 
@@ -101,7 +94,7 @@ namespace ProjectEye.Core.Service
         private void Main_OnLeaveEvent(object service, int msg)
         {
             //关闭番茄
-            Close();
+            // Close();
         }
         private void Config_Changed(object sender, EventArgs e)
         {
@@ -152,34 +145,34 @@ namespace ProjectEye.Core.Service
             timerWatcher.Stop();
             //计次
             workCount++;
-            if (workCount == 4)
-            {
-                //第四次工作完成，长休息
-                restTimer.Interval = new TimeSpan(0, config.options.Tomato.LongRestMinutes, 0);
-#if DEBUG
-                restTimer.Interval = new TimeSpan(0, 0, 10);
-#endif
-                //tip = $"获得一个番茄！完成了一组工作，请休息{config.options.Tomato.LongRestMinutes}分钟，我会在下一次工作开始时再次提醒您。";
-                string tip1 = Application.Current.Resources["Lang_TomatoWorkfinishTip1"].ToString().Replace("{x}", config.options.Tomato.LongRestMinutes.ToString());
-                tip = $"{Application.Current.Resources["Lang_Getatomato"]}{tip1}";
+//             if (workCount == 4)
+//             {
+//                 //第四次工作完成，长休息
+//                 restTimer.Interval = new TimeSpan(0, config.options.Tomato.LongRestMinutes, 0);
+// #if DEBUG
+//                 restTimer.Interval = new TimeSpan(0, 0, 10);
+// #endif
+//                 //tip = $"获得一个番茄！完成了一组工作，请休息{config.options.Tomato.LongRestMinutes}分钟，我会在下一次工作开始时再次提醒您。";
+//                 string tip1 = Application.Current.Resources["Lang_TomatoWorkfinishTip1"].ToString().Replace("{x}", config.options.Tomato.LongRestMinutes.ToString());
+//                 tip = $"{Application.Current.Resources["Lang_Getatomato"]}{tip1}";
 
-                subtitle = $"{Application.Current.Resources["Lang_Great"]}";
+//                 subtitle = $"{Application.Current.Resources["Lang_Great"]}";
 
-                //数据记录
+//                 //数据记录
 
-                //  判断时间更新
-                if (tomatoDataToday.Date != DateTime.Now.Date)
-                {
-                    //  先保存未更新日期的数据
-                    SaveData();
+//                 //  判断时间更新
+//                 if (tomatoDataToday.Date != DateTime.Now.Date)
+//                 {
+//                     //  先保存未更新日期的数据
+//                     SaveData();
 
-                    //  更新日期
-                    tomatoDataToday = FindCreateTodayData();
-                }
+//                     //  更新日期
+//                     tomatoDataToday = FindCreateTodayData();
+//                 }
 
-                tomatoDataToday.TomatoCount++;
-                SaveData();
-            }
+//                 tomatoDataToday.TomatoCount++;
+//                 SaveData();
+//             }
 
 
             //进入休息时间
@@ -191,15 +184,16 @@ namespace ProjectEye.Core.Service
             icorefreshTimer.Interval = new TimeSpan(0, 0, (int)restTimer.Interval.TotalMinutes * 60 / 10);
             icorefreshTimer.Start();
 
+            // if (config.options.Tomato.IsEnabledInteractiveModel)
+            // {
+            //     Dialog($"{Application.Current.Resources["Lang_TomatoTimer"]}", tip, subtitle);
+            // }
+            // else
+            // {
+            //    tray.BalloonTipIcon($"Tomato：time to rest", tip);
+            // }
 
-            if (config.options.Tomato.IsEnabledInteractiveModel)
-            {
-                Dialog($"{Application.Current.Resources["Lang_TomatoTimer"]}", tip, subtitle);
-            }
-            else
-            {
-                tray.BalloonTipIcon($"Tomato：{workCount}/4", tip);
-            }
+            tray.BalloonTipIcon($"Tomato：time to rest", tip);
         }
         private void RestTimer_Tick(object sender, EventArgs e)
         {
@@ -214,13 +208,13 @@ namespace ProjectEye.Core.Service
                 {
                     //工作中
                     string timestr = string.Format("{0:F}", workTimer.Interval.TotalMinutes - timerWatcher.Elapsed.TotalMinutes);
-                    tray.SetText($"Tomato：[{(workCount + 1)}/4] {Application.Current.Resources["Lang_Workingtime"]}\r\n{Application.Current.Resources["Lang_Remainingtime"]}: {timestr} {Application.Current.Resources["Lang_Minutes"]}");
+                    tray.SetText($"Tomato：[{(workCount + 1)}] {Application.Current.Resources["Lang_Workingtime"]}\r\n{Application.Current.Resources["Lang_Remainingtime"]}: {timestr} {Application.Current.Resources["Lang_Minutes"]}");
                 }
                 if (restTimer.IsEnabled)
                 {
                     //休息中
                     string timestr = string.Format("{0:F}", restTimer.Interval.TotalMinutes - timerWatcher.Elapsed.TotalMinutes);
-                    tray.SetText($"Tomato：[{(workCount + 1)}/4] {Application.Current.Resources["Lang_Breakingtime"]}\r\n{Application.Current.Resources["Lang_Remainingtime"]}: {timestr} {Application.Current.Resources["Lang_Minutes"]}");
+                    tray.SetText($"Tomato：[{(workCount + 1)}] {Application.Current.Resources["Lang_Breakingtime"]}\r\n{Application.Current.Resources["Lang_Remainingtime"]}: {timestr} {Application.Current.Resources["Lang_Minutes"]}");
                 }
             }
         }
@@ -298,18 +292,18 @@ namespace ProjectEye.Core.Service
                 //停止休息计时
                 restTimer.Stop();
                 timerWatcher.Stop();
-                if (workCount == 4)
-                {
-                    //重置工作计次
-                    workCount = 0;
-                    //重置休息时间
-                    restTimer.Interval = new TimeSpan(0, config.options.Tomato.ShortRestMinutes, 0);
-#if DEBUG
-                    restTimer.Interval = new TimeSpan(0, 0, 5);
-#endif
-                    //统计数据
-                    tomatoDataToday.TomatoCount++;
-                }
+//                 if (workCount == 4)
+//                 {
+//                     //重置工作计次
+//                     workCount = 0;
+//                     //重置休息时间
+//                     restTimer.Interval = new TimeSpan(0, config.options.Tomato.ShortRestMinutes, 0);
+// #if DEBUG
+//                     restTimer.Interval = new TimeSpan(0, 0, 5);
+// #endif
+//                     //统计数据
+//                     tomatoDataToday.TomatoCount++;
+//                 }
 
                 //继续
                 Start();
@@ -491,7 +485,7 @@ namespace ProjectEye.Core.Service
         private void Worktoast_OnAutoHide(Project1UIToast sender, int type = 0)
         {
             //超时没有点击确定进入工作时间时退出番茄时钟
-            Close();
+            // Close();
         }
 
         private void Worktoast_OnButtonClick(string name, Project1UIToast sender)

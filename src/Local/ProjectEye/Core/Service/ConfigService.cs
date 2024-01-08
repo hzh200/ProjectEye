@@ -90,7 +90,7 @@ namespace ProjectEye.Core.Service
             options.General.Startup = false;
             options.General.LeaveListener = true;
             options.General.WarnTime = 20;
-            options.General.IsTomatoMode = false;
+            options.General.IsTomatoMode = true;
 
             options.Style = new StyleModel();
             options.Style.Theme = systemResources.Themes[0];
